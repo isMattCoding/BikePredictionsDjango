@@ -1,0 +1,118 @@
+{% load static %}{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}" />
+    {% tailwind_css %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="foo,bar" />
+    <meta name="description" content="foo" />
+    {% if title %}
+    <title>Django Blog - {{ title }}</title>
+    {% else %}
+    <title>Django Blog</title>
+    {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body class="font-serif leading-normal tracking-normal">
+    <div class="h-24 bg-cyan-950 dark:bg-cyan-950">
+      <header class="container mx-auto flex w-full items-center justify-between py-4 px-6">
+        <a href="#">
+          <div class="w-full text-center text-lg font-extrabold sm:w-fit sm:text-left">
+            <span class="text-violet-500">WMBT</span>
+          </div>
+        </a>
+        <nav class="bg-white text-base dark:bg-slate-900 block">
+          <ul class="flex items-center space-x-2">
+            <li class="group relative">
+              <a
+                class="block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
+                href="{% url 'blog-home'%}"
+              >
+                Home
+              </a>
+            </li>
+            <li class="group relative">
+              <a
+                class="block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
+                href="/about"
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
+                href="{% url 'profile' %}"
+              >
+                Profile
+              </a>
+            </li>
+            <li>
+              <a
+                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
+                href="{% url 'logout' %}"
+              >
+                Logout
+              </a>
+            </li>
+            <li>
+              <a
+                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
+                href="{% url 'login' %}"
+              >
+                Login
+              </a>
+            </li>
+            <li>
+              <a
+                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
+                href="{% url 'register' %}"
+              >
+                Register
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <button
+          class="block text-slate-400 hover:text-slate-900 dark:hover:text-slate-50 sm:hidden"
+          title="Open navigation menu"
+        >
+          <svg preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" width="1.2em" height="1.2em">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            ></path>
+          </svg>
+        </button>
+      </header>
+    </div>
+    <main role="main" class="container mx-auto">
+      <div>
+        <section class="flex items-center justify-center my-auto">
+          {% if messages %} {% for message in messages %}
+          <div>{{ message }}</div>
+          {% endfor %} {% endif%} {% block content %} {% endblock %}
+        </section>
+      </div>
+      <div class="columns-4">
+        <div>
+          <h3 class="text-2xl">Our Sidebar</h3>
+          <p class="text-muted">You can put any information here you'd like.
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-light">Latest Posts</li>
+              <li class="list-group-item list-group-item-light">Announcements</li>
+              <li class="list-group-item list-group-item-light">Calendars</li>
+              <li class="list-group-item list-group-item-light">etc</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

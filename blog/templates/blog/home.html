@@ -1,0 +1,18 @@
+{% extends "blog/base.html" %} {% block content %} {% for post in posts %}
+<article class="lg:w-1/4 md:w-1/2 w-full p-4">
+  <img
+    src="{{ post.author.profile.image.url }}"
+    class="rounded-xl"
+    height="100"
+    width="100"
+    alt="{{ post.author.username }}'s profile photo"
+  />
+  <div class="p-8 rounded-xl shadow-md">
+    <div>
+      <h4 class="mb-2 text-lg font-semibold">{{ post.title }}</h4>
+      <p class="text-base">By {{ post.author }} on {{ post.date_posted|date:"d F, Y" }}</p>
+    </div>
+    <p>{{ post.content }}</p>
+  </div>
+</article>
+{% endfor %} {% endblock content %}

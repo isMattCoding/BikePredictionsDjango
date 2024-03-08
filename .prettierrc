@@ -1,0 +1,13 @@
+{
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "printWidth": 120,
+        "singleQuote": true,
+        "wrapAttributes": true,
+        "endOfLine": "auto"
+      }
+    }
+  ]
+}
