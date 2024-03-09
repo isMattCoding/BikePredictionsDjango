@@ -20,7 +20,6 @@ def get_data():
 
     r = requests.get(url, params=params)
     if r.status_code == 200:
-        # print(r.json())
         data = [{'date': item['date'], 'sum_counts': item['sum_counts']} for item in r.json()['results']]
     else:
         raise Exception(f"Failed to fetch data from the API. Status code: {r.status_code}")
@@ -78,21 +77,53 @@ def runMLModel(data):
 @sync_to_async
 def saveResultsToDB(result):
     for data in result:
+        actual_data = None
         if not (math.isnan(data['actual'])):
-            result_to_save = Bikes(
-                actual=data["actual"],
-                forecast=data["forecast"],
-                upper=data["forecast_upper"],
-                lower=data["forecast_lower"],
-                date_time=data["DateTime"]
-            )
-            result_to_save.save()
+            actual_data = data["actual"]
+        result_to_save = Bikes(
+            actual=actual_data,
+            forecast=data["forecast"],
+            upper=data["forecast_upper"],
+            lower=data["forecast_lower"],
+            date_time=data["DateTime"]
+        )
+        result_to_save.save()
+
+
+@sync_to_async
+def check_is_entry_today(today):
+    todays_data = Bikes.objects.filter(date_time=today)
+    return todays_data.exists() and todays_data[0].actual != None
+
+@sync_to_async
+def get_treated_data():
+    bikes_queryset = Bikes.objects.all()
+    data = []
+    for bikes_data in bikes_queryset:
+        actual_data = None
+        if bikes_data.actual != None:
+            actual_data = float(bikes_data.actual)
+        data.append({
+            "actual":actual_data,
+            "forecast":float(bikes_data.forecast),
+            "forecast_upper":float(bikes_data.upper),
+            "forecast_lower":float(bikes_data.lower),
+            "DateTime":bikes_data.date_time
+        })
+
+
+    return data
 
 async def bikes(request):
     context = {}
     data = get_data()
-    if data != "Waiting...":
-        context["forecast"] = runMLModel(data)
-        await saveResultsToDB(context["forecast"])
-
+    today = datetime.datetime.fromisoformat(data[0]['date']).strftime("%Y-%m-%d %H:%M:%S")
+    is_entry_today = await check_is_entry_today(today)
+    if not is_entry_today:
+        if data != "Waiting...":
+            context["forecast"] = runMLModel(data)[-72:]
+            await saveResultsToDB(context["forecast"])
+    else:
+        treated_data = await get_treated_data()
+        context["forecast"] = treated_data[-72:]
     return render(request, 'bikes/bikes.html', context)

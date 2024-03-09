@@ -38,13 +38,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .getAttribute("data-forecast-data")
       .replace(/'/g, '"')
       .replaceAll("nan", "null")
+      .replaceAll("None", "null")
   )
     .sort(compareDates)
     .map((x) => {
       return {
         date: x.DateTime,
         sum_counts: x.forecast,
-        actual: x.actual,
+        actual: typeof x.actual === "number" ? x.actual : undefined,
         lower: x.forecast_lower,
         upper: x.forecast_upper,
       };
