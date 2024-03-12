@@ -36,18 +36,18 @@ def runMLModel(data):
         forecast_horizon = 25,
         coverage = 0.85,
         metadata_param = MetadataParam(
-            time_col = "DateTime",
+            time_col = "DateTimeCol",
             value_col = "sum_counts",
             freq = "H",
             train_end_date=datetime.datetime.today() + datetime.timedelta(days=3)
         )
     )
     df = pd.DataFrame(data)
-    df['date'] = pd.to_datetime(df["date"], utc=True, errors='coerce')
-    df['date'] = df['date'].values
-    df.sort_values(by='date', inplace=True)
-    df["DateTime"] = df["date"]
-    df.set_index('date', inplace=True)
+    df['DateTime'] = pd.to_datetime(df['DateTime'], utc=True, errors='coerce')
+    df['DateTime'] = df['DateTime'].values
+    df.sort_values(by='DateTime', inplace=True)
+    df['DateTimeCol'] = df['DateTime']
+    df.set_index('DateTime', inplace=True)
 
     forecaster = Forecaster()
     silverkite = forecaster.run_forecast_config(
@@ -72,6 +72,9 @@ def runMLModel(data):
                 last_24_entries[index_key] = {forecast_key: forecast_value[index_key]}
 
     result = list(last_24_entries.values())
+    for item in result:
+        if 'DateTimeCol' in item:
+            item['DateTime'] = item.pop('DateTimeCol')
     return result
 
 @sync_to_async
@@ -87,7 +90,7 @@ def saveResultsToDB(result):
             lower=data["forecast_lower"],
             date_time=data["DateTime"]
         )
-        result_to_save.save()
+        result_to_save.save_result()
 
 
 @sync_to_async
@@ -111,19 +114,38 @@ def get_treated_data():
             "DateTime":bikes_data.date_time
         })
 
-
     return data
+
+def change_date_string_to_datetime(date_string):
+    return datetime.datetime.fromisoformat(date_string)
+
+def merge_data(data, treated_data):
+    filtered_data = list(filter(lambda entry: entry['actual'] is not None, treated_data))
+    treated_dates = {item['DateTime'] for item in filtered_data}
+    unique_data = [item for item in data if item['DateTime'] not in treated_dates]
+    abridged_treated_data = []
+    for item in filtered_data:
+        abridged_treated_data.append({'DateTime': item['DateTime'], 'sum_counts': item['actual']})
+    merged_data = abridged_treated_data + unique_data
+    return sorted(merged_data, key=lambda x: x['DateTime'])
 
 async def bikes(request):
     context = {}
     data = get_data()
-    today = datetime.datetime.fromisoformat(data[0]['date']).strftime("%Y-%m-%d %H:%M:%S")
+    treated_data = await get_treated_data()
+    for item in data:
+        item['DateTime'] = change_date_string_to_datetime(item['date'])
+    today = data[0]['DateTime']
     is_entry_today = await check_is_entry_today(today)
     if not is_entry_today:
-        if data != "Waiting...":
-            context["forecast"] = runMLModel(data)[-72:]
-            await saveResultsToDB(context["forecast"])
+        MLResult = runMLModel(merge_data(data, treated_data))[-72:]
+        await saveResultsToDB(MLResult)
+        for item in MLResult:
+            item['DateTime'] = item['DateTime'].strftime("%Y-%m-%d %H:%M:%S")
+        context["forecast"] = MLResult
     else:
-        treated_data = await get_treated_data()
-        context["forecast"] = treated_data[-72:]
+        sorted_treated_data = sorted(treated_data, key=lambda x: x['DateTime'])
+        for item in sorted_treated_data:
+            item['DateTime'] = item['DateTime'].strftime("%Y-%m-%d %H:%M:%S")
+        context["forecast"] = sorted_treated_data[-72:]
     return render(request, 'bikes/bikes.html', context)
