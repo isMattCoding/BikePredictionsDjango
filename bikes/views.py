@@ -75,6 +75,7 @@ def runMLModel(data):
     for item in result:
         if 'DateTimeCol' in item:
             item['DateTime'] = item.pop('DateTimeCol')
+
     return result
 
 @sync_to_async

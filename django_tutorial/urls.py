@@ -20,17 +20,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from users import views as user_views
+from blog import views as blog_views
 from bikes import views as bikes_views
+
 
 urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path("admin/", admin.site.urls),
     path("register/", user_views.register, name="register"),
     path("profile/", user_views.profile, name="profile"),
-    path("bikes/", bikes_views.bikes, name="bikes"),
     path("login/", auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(template_name="users/logout.html"), name="logout"),
-    path("", include('blog.urls')),
+    path("about/", blog_views.about, name="blog-about"),
+    path("", bikes_views.bikes, name="bikes"),
 ]
 
 if settings.DEBUG:

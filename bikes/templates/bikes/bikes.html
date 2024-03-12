@@ -1,6 +1,8 @@
 {% extends "blog/base.html" %} {% load static %} {% block content %}
 <div class="flex flex-col w-full mx-8">
-  <div class="content-section">Helloooo</div>
+  <div class="content-section my-4">
+    <h1 class="text-xl">Bike usage on Boulevard Sébastopol, Paris</h1>
+  </div>
   <div class="mt-4 w-full">
     <script src="{% static 'js/chart_script.js' %}"></script>
     <canvas class="w-full" id="myChart" data-forecast-data="{{ forecast }}"></canvas>

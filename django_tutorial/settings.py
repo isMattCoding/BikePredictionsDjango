@@ -141,5 +141,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  # Additional directories for static files
 ]
 
-LOGIN_REDIRECT_URL = 'blog-home'
+LOGIN_REDIRECT_URL = 'bikes'
 LOGIN_URL = 'login'

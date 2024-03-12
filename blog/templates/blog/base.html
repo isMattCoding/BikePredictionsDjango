@@ -28,7 +28,7 @@
             <li class="group relative">
               <a
                 class="block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
-                href="{% url 'blog-home'%}"
+                href="{% url 'bikes'%}"
               >
                 Home
               </a>
@@ -39,38 +39,6 @@
                 href="/about"
               >
                 About
-              </a>
-            </li>
-            <li>
-              <a
-                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
-                href="{% url 'profile' %}"
-              >
-                Profile
-              </a>
-            </li>
-            <li>
-              <a
-                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
-                href="{% url 'logout' %}"
-              >
-                Logout
-              </a>
-            </li>
-            <li>
-              <a
-                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
-                href="{% url 'login' %}"
-              >
-                Login
-              </a>
-            </li>
-            <li>
-              <a
-                class="undefined block whitespace-nowrap px-2 py-2 text-sm text-slate-400 no-underline transition hover:text-slate-900 dark:hover:text-slate-50"
-                href="{% url 'register' %}"
-              >
-                Register
               </a>
             </li>
           </ul>
@@ -99,19 +67,6 @@
           <div>{{ message }}</div>
           {% endfor %} {% endif%} {% block content %} {% endblock %}
         </section>
-      </div>
-      <div class="columns-4">
-        <div>
-          <h3 class="text-2xl">Our Sidebar</h3>
-          <p class="text-muted">You can put any information here you'd like.
-            <ul class="list-group">
-              <li class="list-group-item list-group-item-light">Latest Posts</li>
-              <li class="list-group-item list-group-item-light">Announcements</li>
-              <li class="list-group-item list-group-item-light">Calendars</li>
-              <li class="list-group-item list-group-item-light">etc</li>
-            </ul>
-          </p>
-        </div>
       </div>
     </main>
   </body>

@@ -1,4 +1,46 @@
-{% extends "blog/base.html" %}
-{% block content %}
-  <h1>About Home</h1>
+{% extends "blog/base.html" %} {% block content %}
+<div class="my-10">
+  <h1 class="text-2xl">About this project</h1>
+  <div class="my-4">
+    <p>
+      Motivated by the surge in cyclist activity across Paris post-COVID, I embarked on a mission to provide valuable
+      insights to cyclists in the city. Utilizing open data from la Ville de Paris, I initiated a proof of concept aimed
+      at predicting bike usage frequency. Driven by a desire to equip cyclists with the information they need to
+      anticipate road congestion, I delved into the datasets with fervor. My goal was to offer practical insights that
+      could assist cyclists in navigating the bustling streets of Paris with ease and confidence, ultimately promoting
+      sustainable urban mobility.
+    </p>
+  </div>
+  <div class="my-4">
+    <p>
+      Initially, I processed the data using an open-source machine learning model known as SILVERKITE within a Jupyter
+      Notebook environment. However, I encountered challenges with the static nature of this approach, as distributing
+      and reproducing the results proved difficult. Seeking a more dynamic and scalable solution, I developed a Django
+      application. This application integrates with the OpenData Paris API to fetch real-time data and automatically
+      applies the predictive model. Transitioning to this web-based platform allowed for a more dynamic and accessible
+      tool, empowering users to effortlessly access predictions on bike usage frequency in Paris.
+    </p>
+  </div>
+  <div class="my-4">
+    <p>
+      While I could have opted to showcase predictions for all streets of Paris, I made the strategic decision to
+      initially concentrate on Boulevard Sébastopol. Renowned as the Parisian street with the highest bike traffic, it
+      presented a compelling focal point for the proof of concept. By narrowing the scope to this bustling thoroughfare,
+      I aimed to demonstrate the efficacy of the predictive model in a concentrated and impactful manner. Focusing on
+      Boulevard Sébastopol not only highlighted the potential of the application but also provided valuable insights
+      that could directly benefit cyclists navigating one of the city's busiest routes. This targeted approach allowed
+      for a focused analysis, paving the way for future expansion to encompass additional streets across Paris.
+    </p>
+  </div>
+  <div class="my-4">
+    <p>
+      There are a number of improvements that can be made to scale this project and improve the accuracy of the machine
+      learning model. If you wish to contribute, please check out the
+      <a class="text-blue-900 font-bold" href="https://github.com/isMattCoding/BikePredictionsDjango"
+        >Github repository</a
+      >
+      or <a class="text-blue-900 font-bold" href="https://WMBT.services/contact">contact me</a>!
+    </p>
+  </div>
+</div>
 {% endblock content %}
