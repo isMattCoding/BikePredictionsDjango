@@ -32,8 +32,12 @@ document.addEventListener("DOMContentLoaded", function () {
       date
     );
     console.log(formattedDate);
-    if (formattedDate.includes("12 AM") || index === 0) {
-      return formattedDate;
+    if (
+      formattedDate.includes("12 am") ||
+      formattedDate.includes(" 0 am") ||
+      index === 0
+    ) {
+      return formattedDate.replace(" 0 am", " 12 am");
     }
     return formattedDate.split(", ")[1];
   }

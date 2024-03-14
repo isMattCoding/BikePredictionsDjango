@@ -33,13 +33,13 @@ def get_data():
 def runMLModel(data):
     forecast_config = ForecastConfig(
         model_template = "SILVERKITE",
-        forecast_horizon = 25,
+        forecast_horizon = 24,
         coverage = 0.85,
         metadata_param = MetadataParam(
             time_col = "DateTimeCol",
             value_col = "sum_counts",
             freq = "H",
-            train_end_date=datetime.datetime.today() + datetime.timedelta(days=3)
+            train_end_date=datetime.datetime.today()
         )
     )
     df = pd.DataFrame(data)
@@ -89,14 +89,18 @@ def saveResultsToDB(result):
             forecast=data["forecast"],
             upper=data["forecast_upper"],
             lower=data["forecast_lower"],
-            date_time=data["DateTime"]
+            date_time=pd.to_datetime(data["DateTime"]).tz_localize('Europe/Paris')
         )
+        print(result_to_save.__dict__)
         result_to_save.save_result()
 
 
 @sync_to_async
 def check_is_entry_today(today):
     todays_data = Bikes.objects.filter(date_time=today)
+    print('doays_data', todays_data, today)
+    if todays_data:
+        print(todays_data[0].__dict__)
     return todays_data.exists() and todays_data[0].actual != None
 
 @sync_to_async
@@ -136,8 +140,10 @@ async def bikes(request):
     treated_data = await get_treated_data()
     for item in data:
         item['DateTime'] = change_date_string_to_datetime(item['date'])
-    today = data[0]['DateTime']
+    today = pd.to_datetime(data[1]['DateTime']).tz_convert('Europe/Paris')
+    print('today', today)
     is_entry_today = await check_is_entry_today(today)
+    print('is_entry_today (should be True)', is_entry_today)
     if not is_entry_today:
         MLResult = runMLModel(merge_data(data, treated_data))[-72:]
         await saveResultsToDB(MLResult)

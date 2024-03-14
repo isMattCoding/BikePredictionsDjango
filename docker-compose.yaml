@@ -1,9 +1,30 @@
 version: '3.8'
 services:
+  # db_dev:
+  #   image: sqlite:latest  # Using SQLite3 for development
+  #   container_name: your_db_dev_container_name
+  #   restart: always
+  #   environment:
+  #     - "SQLITE_DB=/var/lib/sqlite/db.sqlite3"
+  #   ports:
+  #     - "5000:5000"
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver
     volumes:
-      - .
+      - .:/greykite-env
     ports:
       - 8000:8000
+
+#   web:
+#     build: .
+#     environment:
+#       MYENV: EXAMPLE
+#     volumes:
+#       - .:/greykite-env
+#   web_run:
+#     extends:
+#       service: web
+#     command: python manage.py runserver 0.0.0.0:8000
+#     ports:
+#       - "8000:8000"
