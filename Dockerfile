@@ -10,6 +10,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential gcc libpcre3 libpcre3-dev \
   python3-dev default-libmysqlclient-dev libopenblas-dev \
   ca-certificates curl gnupg
+RUN apt-get install python3-dev default-libmysqlclient-dev build-essential pkg-config
+RUN apt-get update && apt-get install -y \
+  libpq-dev \
+  gcc \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip setuptools wheel eztools
 RUN pip install cmake numpy
